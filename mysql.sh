@@ -38,5 +38,15 @@ VALIDATE $? "enabling mysql"
 systemctl start mysqld &>>$LOGFILE
 VALIDATE $? "starting mysql"
 
-mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOGFILE
-VALIDATE $? "setting root password"
+# mysql -hdb.rishvihaan.store -uroot -pExpenseApp@1 -e 'show databases;'  to check whether password being set or not will engage this command and give echo $? if answer is 0 it is already being set else need to be excuted
+# VALIDATE $? "setting root password"
+# below code will be useful for checking idempotent nature
+
+if [ $? -ne 0 ] 
+ then 
+    mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOGFILE
+    VALIDATE $? "setting root password"
+ else 
+    echo -e "Mysql root password is already set up...$Y SKIPPING $N"   
+ fi
+ 
