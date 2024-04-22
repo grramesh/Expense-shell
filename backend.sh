@@ -43,3 +43,4 @@ if [ $ -ne 0 ]
 VALIDATE $? "Creating expense user"
 else 
   echo -e "expense user already created ..$Y SKIIPING $N"
+ fi 
