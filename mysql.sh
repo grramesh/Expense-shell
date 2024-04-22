@@ -9,6 +9,9 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 B="\e[34m"
+echo "please enter db password:"
+read -s mysql_root_password
+
 
 VALIDATE(){    
        if [ $1 -ne 0 ]
@@ -42,11 +45,12 @@ VALIDATE $? "starting mysql"
 # VALIDATE $? "setting root password"
 # below code will be useful for checking idempotent nature
 
+mysql -hdb.rishvihaan.store -uroot -p${mysql_root_password} -e 'show databases;' &>>$LOGFILE
+
 if [ $? -ne 0 ] 
  then 
-    mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOGFILE
-    VALIDATE $? "setting root password"
+    mysql_secure_installation --set-root-pass ${mysql_root_password} &>>$LOGFILE
+    VALIDATE $? "Mysql root password setup"
  else 
     echo -e "Mysql root password is already set up...$Y SKIPPING $N"   
  fi
- 
