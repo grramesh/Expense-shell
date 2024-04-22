@@ -65,7 +65,7 @@ else
  VALIDATE $? "copied backend service"
 
  systemctl daemon-reload &>>$LOGFILE
-VALIDATE $? "daemon reload"
+ VALIDATE $? "daemon reload"
 
  systemctl start backend &>>$LOGFILE
  VALIDATE $? "start backend"
