@@ -52,6 +52,7 @@ else
  VALIDATE $? "Downloading backend code"
 
  cd /app &>>$LOGFILE
+ rm -rf /app/* # here /* is directory with files . (before scenerio--> sudo su -->cd /app ->unzip /tmp/backend.zip --> error appeared due to it was asking to override the file)
  unzip /tmp/backend.zip &>>$LOGFILE
  VALIDATE $? "Extracted backend code"
 
