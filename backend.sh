@@ -60,6 +60,7 @@ else
  VALIDATE$? "Installing nodejs dependencies"
  # shell scripting cannot use vim --> that is for humans 
  # hence created backend.serive and copying from it and pasting here
+ #check your repo and path
  cp /home/ec2-user/expense-shell/backend.service /etc/systemd/system/backend.service  &>>$LOGFILE
  VALIDATE $? "copied backend service"
 
@@ -76,10 +77,11 @@ VALIDATE $? "daemon reload"
  VALIDATE $? "Installing mysql client"
 
  mysql -h db.rishvihaan.store -uroot -p${mysql_root_password} < /app/schema/backend.sql &>>$LOGFILE
- VALIDATE $? "schema loading"
+ VALIDATE $? "schema loading"  #at last checking whether it is repeting --> sudo cat /app/schema/backend.sql (anyhow it is idempotency)
+
 
  systemctl restart backend &>>$LOGFILE
  VALIDATE $? "Restarting backend"
 
-
+# at last whether system is running or not --> netstat -lntp ---> systemctl status backend
 
