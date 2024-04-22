@@ -9,7 +9,8 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 B="\e[34m"
-
+echo "please enter db password:"
+read -s mysql_root_password
 
 VALIDATE(){    
        if [ $1 -ne 0 ]
@@ -43,4 +44,41 @@ if [ $ -ne 0 ]
 VALIDATE $? "Creating expense user"
 else 
   echo -e "expense user already created ..$Y SKIIPING $N"
- fi 
+ fi
+
+ mkdir -p /app &>>$LOGFILE    # -p is added additionally , if there is no directory then it makes directory if not it becomes silent
+ VALIDATE $? "creating app directory"
+ curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+ VALIDATE $? "Downloading backend code"
+
+ cd /app &>>$LOGFILE
+ unzip /tmp/backend.zip &>>$LOGFILE
+ VALIDATE $? "Extracted backend code"
+
+ npm install &>>$LOGFILE
+ VALIDATE$? "Installing nodejs dependencies"
+ # shell scripting cannot use vim --> that is for humans 
+ # hence created backend.serive and copying from it and pasting here
+ cp /home/ec2-user/expense-shell/backend.service /etc/systemd/system/backend.service  &>>$LOGFILE
+ VALIDATE $? "copied backend service"
+
+ systemctl daemon-reload &>>$LOGFILE
+VALIDATE $? "daemon reload"
+
+ systemctl start backend &>>$LOGFILE
+ VALIDATE $? "start backend"
+
+ systemctl enable backend &>>$LOGFILE
+ VALIDATE $? "enable backend"
+
+ dnf install mysql -y  &>>$LOGFILE
+ VALIDATE $? "Installing mysql client"
+
+ mysql -h db.rishvihaan.store -uroot -p${mysql_root_password} < /app/schema/backend.sql &>>$LOGFILE
+ VALIDATE $? "schema loading"
+
+ systemctl restart backend &>>$LOGFILE
+ VALIDATE $? "Restarting backend"
+
+
+
