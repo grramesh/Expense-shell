@@ -38,7 +38,7 @@ dnf install nodejs -y     &>>$LOGFILE
 VALIDATE $? "installing nodejs"
 
 id expense &>>$LOGFILE
-if [ $ -ne 0 ]
+if [ $? -ne 0 ]
  then 
   useradd expense &>>$LOGFILE
 VALIDATE $? "Creating expense user"
@@ -57,7 +57,7 @@ else
  VALIDATE $? "Extracted backend code"
 
  npm install &>>$LOGFILE
- VALIDATE$? "Installing nodejs dependencies"
+ VALIDATE $? "Installing nodejs dependencies"
  # shell scripting cannot use vim --> that is for humans 
  # hence created backend.serive and copying from it and pasting here
  #check your repo and path
